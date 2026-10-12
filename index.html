@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تكوين للخط الكوفي الدائري</title>
-    <!-- استدعاء مكتبة jsPDF لتصدير ملفات PDF -->
+    <title>تكوين للخط الكوفي المربع - تصميم الاستاذ : يوسف حمد الصييفي</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
@@ -13,8 +12,7 @@
             --text-color: #2c2c2c;
             --primary: #111111;
             --gold: #c5a059;
-            --gold-hover: #d4af37;
-            --border: #e2dcd0;
+            --border: #dcd6c8;
             --accent: #8b5a2b;
         }
 
@@ -39,7 +37,6 @@
             font-size: 1.5rem;
             margin: 0 0 5px 0;
             color: var(--primary);
-            letter-spacing: 0.5px;
         }
 
         .designer-credit {
@@ -66,13 +63,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
         }
 
         canvas {
             background: #ffffff;
             cursor: pointer;
-            border-radius: 50%;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
             box-shadow: 0 0 10px rgba(0,0,0,0.03);
             max-width: 100%;
             height: auto;
@@ -133,9 +130,6 @@
             color: #fff;
             border-color: var(--gold);
         }
-        button.gold-btn.active {
-            background: #9c7c3d;
-        }
 
         .action-btn {
             background: var(--primary);
@@ -165,7 +159,6 @@
         .admin-section {
             border-top: 1px dashed var(--border);
             padding-top: 10px;
-            margin-top: 5px;
         }
 
         input[type="text"] {
@@ -186,22 +179,21 @@
 <body>
 
     <header>
-        <h1>تكوين للخط الكوفي الدائري</h1>
+        <h1>تكوين للخط الكوفي المربع</h1>
         <div class="designer-credit">تصميم الاستاذ : يوسف حمد الصييفي</div>
     </header>
 
     <div class="main-container">
-        <!-- لوحة الرسم -->
+        <!-- لوحة الشبكة المربعة -->
         <div class="canvas-card">
             <canvas id="kuficCanvas" width="550" height="550"></canvas>
-            <div class="hint" style="margin-top: 10px;">انقر أو اسحب على الخلايا الدائرية للكتابة</div>
+            <div class="hint" style="margin-top: 10px;">انقر أو اسحب على المربعات للرسم والتكوين</div>
         </div>
 
-        <!-- لوحة التحكم والتحدث -->
+        <!-- لوحة التحكم -->
         <div class="sidebar">
-            <!-- حالة القفل -->
             <div class="lock-badge">
-                <span id="lockStatusText">🔓 الشبكية مفتوحة للتعديل</span>
+                <span id="lockStatusText">🔓 الشبكية مفتوحة</span>
                 <button onclick="toggleGridLock()" id="lockBtn" style="padding: 3px 8px; font-size: 0.75rem;">قفل الشبكية</button>
             </div>
 
@@ -209,8 +201,8 @@
             <div class="control-group">
                 <label>النماذج الجاهزة:</label>
                 <select id="presetsSelect" onchange="loadPreset()">
-                    <option value="">-- اختر نموذجاً --</option>
-                    <option value="empty">دائرة فارغة</option>
+                    <option value="empty">شبكة فارغة</option>
+                    <option value="hamza">حرف الهمزة (ء) الهندسي</option>
                 </select>
             </div>
 
@@ -224,32 +216,28 @@
                 </div>
             </div>
 
-            <!-- إعدادات الشبكة (تتأثر بالقفل) -->
+            <!-- أبعاد الشبكة -->
             <div class="control-group" id="gridSettingsGroup">
-                <label>أبعاد الشبكية الدائرية:</label>
+                <label>أبعاد الشبكة المربعة (عدد الخلايا):</label>
                 <div style="display: flex; gap: 10px;">
                     <div style="flex:1;">
-                        <span class="hint">الحلقات:</span>
-                        <input type="range" id="ringsRange" min="3" max="8" value="5" style="width:100%" onchange="updateGridDimensions()">
-                    </div>
-                    <div style="flex:1;">
-                        <span class="hint">القطاعات:</span>
-                        <input type="range" id="sectorsRange" min="20" max="60" value="36" style="width:100%" onchange="updateGridDimensions()">
+                        <span class="hint">الأعمدة/الصفوف:</span>
+                        <input type="range" id="gridSizeRange" min="10" max="30" value="16" style="width:100%" onchange="updateGridDimensions()">
                     </div>
                 </div>
             </div>
 
             <!-- التصدير -->
-            <div class="control-group" style="gap: 8px; margin-top: 5px;">
+            <div class="control-group" style="gap: 8px;">
                 <label>التصدير والحفظ:</label>
                 <button class="action-btn" onclick="exportTransparentPNG()">تحميل كصورة شفافة (Transparent PNG)</button>
                 <button class="action-btn" style="background:#8b5a2b;" onclick="exportPDF()">تحميل كملف PDF</button>
                 <button onclick="clearCanvas()" style="background:#f2dede; color:#a94442; border-color:#ebccd1;">مسح اللوحة بالكامل</button>
             </div>
 
-            <!-- قسم المشرف (خاص بالأستاذ يوسف حصرياً) -->
+            <!-- قسم المشرف -->
             <div class="admin-section" id="adminSection">
-                <label style="color: var(--accent);">إدارة النماذج الخاصة (المشرف):</label>
+                <label style="color: var(--accent);">إدارة النماذج (المشرف):</label>
                 <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 5px;">
                     <input type="text" id="newPresetName" placeholder="اسم النموذج الجديد...">
                     <button onclick="addNewPreset()" style="background: var(--accent); color:#fff; border:none; padding:6px; border-radius:4px; font-size:0.8rem;">حفظ التصميم كنموذج جاهز</button>
@@ -262,26 +250,42 @@
         const canvas = document.getElementById('kuficCanvas');
         const ctx = canvas.getContext('2d');
 
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const innerRadius = 110;
-        const outerRadius = 230;
-
-        let rings = 5;
-        let sectors = 36;
+        let gridSize = 16; // عدد الخلايا افتراضياً
         let isLocked = false;
         let currentTool = 1; // 1: أسود, 2: ذهبي, 0: ممحاة
 
-        let gridState = Array(rings).fill().map(() => Array(sectors).fill(0));
+        let gridState = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
 
-        // نماذج جاهزة أولية
+        // إعداد حرف الهمزة (ء) الهندسي داخل الشبكة المربعة الافتراضية 16x16
+        function createHamzaPreset() {
+            let preset = Array(16).fill().map(() => Array(16).fill(0));
+            // رسم شكل هندسي متناسق للهمزة (ء) في وسط الشبكة المربعة
+            // رأس الهمزة (قوس كوفي مربع مصغر)
+            for (let c = 7; c <= 9; c++) {
+                preset[5][c] = 1;
+            }
+            preset[6][6] = 1;
+            preset[6][10] = 1;
+            preset[7][7] = 1;
+            preset[7][9] = 1;
+            preset[8][8] = 1;
+            
+            // جسم الهمزة / النزول المائل الهندسي الكوفي
+            preset[9][8] = 1;
+            preset[10][7] = 1;
+            preset[11][6] = 1;
+            return preset;
+        }
+
         let customPresets = {
-            "empty": Array(5).fill().map(() => Array(36).fill(0))
+            "empty": Array(16).fill().map(() => Array(16).fill(0)),
+            "hamza": createHamzaPreset()
         };
 
         function drawGrid(isExporting = false, transparentBg = false) {
             const width = canvas.width;
             const height = canvas.height;
+            const cellSize = width / gridSize;
 
             if (isExporting && transparentBg) {
                 ctx.clearRect(0, 0, width, height);
@@ -290,54 +294,39 @@
                 ctx.fillRect(0, 0, width, height);
             }
 
-            const dr = (outerRadius - innerRadius) / rings;
-            const da = (Math.PI * 2) / sectors;
+            // رسم الخلايا الملونة
+            for (let r = 0; r < gridSize; r++) {
+                for (let c = 0; c < gridSize; c++) {
+                    let x = c * cellSize;
+                    let y = r * cellSize;
 
-            for (let r = 0; r < rings; r++) {
-                let rIn = innerRadius + r * dr;
-                let rOut = innerRadius + (r + 1) * dr;
-
-                for (let s = 0; s < sectors; s++) {
-                    let aStart = s * da;
-                    let aEnd = (s + 1) * da;
-
-                    ctx.beginPath();
-                    ctx.arc(centerX, centerY, rIn, aStart, aEnd, false);
-                    ctx.arc(centerX, centerY, rOut, aEnd, aStart, true);
-                    ctx.closePath();
-
-                    if (gridState[r][s] === 1) {
+                    if (gridState[r][c] === 1) {
                         ctx.fillStyle = '#111111';
-                        ctx.fill();
-                    } else if (gridState[r][s] === 2) {
+                        ctx.fillRect(x, y, cellSize, cellSize);
+                    } else if (gridState[r][c] === 2) {
                         ctx.fillStyle = '#c5a059';
-                        ctx.fill();
-                    } else if (!isExporting) {
-                        ctx.fillStyle = '#ffffff';
-                        ctx.fill();
+                        ctx.fillRect(x, y, cellSize, cellSize);
                     }
 
+                    // رسم الخطوط الشبكية المزدوجة والهندسية كالمرجع المرفق
                     if (!isExporting) {
                         ctx.strokeStyle = '#e6e0d4';
-                        ctx.lineWidth = 0.8;
-                        ctx.stroke();
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(x, y, cellSize, cellSize);
+
+                        // خط إضافي داخلي لإعطاء مظهر الخط المربع المزدوج (Double-line grid effect)
+                        ctx.strokeStyle = '#f2efe9';
+                        ctx.lineWidth = 0.5;
+                        ctx.strokeRect(x + 3, y + 3, cellSize - 6, cellSize - 6);
                     }
                 }
             }
 
-            // رسم حدود دائرية رئيسية جمالية عند التصدير
+            // إطار خارجي هندسي عند التصدير
             if (isExporting) {
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, outerRadius, 0, Math.PI * 2);
                 ctx.strokeStyle = '#111';
                 ctx.lineWidth = 3;
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, innerRadius, 0, Math.PI * 2);
-                ctx.strokeStyle = '#111';
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
+                ctx.strokeRect(0, 0, width, height);
             }
         }
 
@@ -360,28 +349,19 @@
 
         function handleCanvasInteraction(event) {
             const rect = canvas.getBoundingClientRect();
-            // حساب الإحداثيات بالنسبة لحجم الـ Canvas الفعلي
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
-            const x = (event.clientX - rect.left) * scaleX - centerX;
-            const y = (event.clientY - rect.top) * scaleY - centerY;
-            
-            const dist = Math.sqrt(x * x + y * y);
-            let angle = Math.atan2(y, x);
-            if (angle < 0) angle += Math.PI * 2;
+            const x = (event.clientX - rect.left) * scaleX;
+            const y = (event.clientY - rect.top) * scaleY;
 
-            const dr = (outerRadius - innerRadius) / rings;
-            const da = (Math.PI * 2) / sectors;
+            const cellSize = canvas.width / gridSize;
+            let c = Math.floor(x / cellSize);
+            let r = Math.floor(y / cellSize);
 
-            if (dist >= innerRadius && dist <= outerRadius) {
-                let r = Math.floor((dist - innerRadius) / dr);
-                let s = Math.floor(angle / da);
-
-                if (r >= 0 && r < rings && s >= 0 && s < sectors) {
-                    if (gridState[r][s] !== currentTool) {
-                        gridState[r][s] = currentTool;
-                        drawGrid();
-                    }
+            if (r >= 0 && r < gridSize && c >= 0 && c < gridSize) {
+                if (gridState[r][c] !== currentTool) {
+                    gridState[r][c] = currentTool;
+                    drawGrid();
                 }
             }
         }
@@ -407,14 +387,14 @@
                 btn.textContent = 'إلغاء القفل';
                 btn.style.background = '#d48806';
                 btn.style.color = '#fff';
-                statusText.textContent = '🔒 الشبكية مقفلة (محمية من التغيير)';
+                statusText.textContent = '🔒 الشبكية مقفلة';
                 settingsGroup.style.opacity = '0.4';
                 settingsGroup.style.pointerEvents = 'none';
             } else {
                 btn.textContent = 'قفل الشبكية';
                 btn.style.background = '';
                 btn.style.color = '';
-                statusText.textContent = '🔓 الشبكية مفتوحة للتعديل';
+                statusText.textContent = '🔓 الشبكية مفتوحة';
                 settingsGroup.style.opacity = '1';
                 settingsGroup.style.pointerEvents = 'auto';
             }
@@ -422,26 +402,23 @@
 
         function updateGridDimensions() {
             if (isLocked) return;
-            const newRings = parseInt(document.getElementById('ringsRange').value);
-            const newSectors = parseInt(document.getElementById('sectorsRange').value);
-
-            if (newRings !== rings || newSectors !== sectors) {
-                rings = newRings;
-                sectors = newSectors;
-                gridState = Array(rings).fill().map(() => Array(sectors).fill(0));
+            const newSize = parseInt(document.getElementById('gridSizeRange').value);
+            if (newSize !== gridSize) {
+                gridSize = newSize;
+                gridState = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
                 drawGrid();
             }
         }
 
         function clearCanvas() {
-            gridState = Array(rings).fill().map(() => Array(sectors).fill(0));
+            gridState = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
             drawGrid();
         }
 
         function exportTransparentPNG() {
             drawGrid(true, true);
             const link = document.createElement('a');
-            link.download = 'circular-kufic-design.png';
+            link.download = 'kufic-square-design.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
             drawGrid(false, false);
@@ -462,14 +439,14 @@
             const xPos = (pageWidth - imgSize) / 2;
 
             pdf.setFontSize(18);
-            pdf.text('تكوين للخط الكوفي الدائري', pageWidth / 2, 25, { align: 'center' });
+            pdf.text('تكوين للخط الكوفي المربع', pageWidth / 2, 25, { align: 'center' });
             
             pdf.setFontSize(11);
             pdf.setTextColor(139, 90, 43);
             pdf.text('تصميم الاستاذ : يوسف حمد الصييفي', pageWidth / 2, 33, { align: 'center' });
 
             pdf.addImage(imgData, 'PNG', xPos, 45, imgSize, imgSize);
-            pdf.save('circular-kufic-design.pdf');
+            pdf.save('kufic-square-design.pdf');
             drawGrid(false, false);
         }
 
@@ -488,7 +465,7 @@
             select.appendChild(option);
 
             document.getElementById('newPresetName').value = '';
-            alert('تم حفظ النموذج بنجاح وإضافته لقائمة النماذج الجاهزة!');
+            alert('تم حفظ التصميم كنموذج جاهز بنجاح!');
         }
 
         function loadPreset() {
@@ -496,15 +473,13 @@
             if (!val) return;
             if (customPresets[val]) {
                 gridState = JSON.parse(JSON.stringify(customPresets[val]));
-                rings = gridState.length;
-                sectors = gridState[0].length;
-                document.getElementById('ringsRange').value = rings;
-                document.getElementById('sectorsRange').value = sectors;
+                gridSize = gridState.length;
+                document.getElementById('gridSizeRange').value = gridSize;
                 drawGrid();
             }
         }
 
-        // الرسم الأولي
+        // رسم الشبكة الأولية
         drawGrid();
     </script>
 </body>
