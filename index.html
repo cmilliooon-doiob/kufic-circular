@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تكوين للخط الكوفي الدائري</title>
-    <!-- استدعاء مكتبة jsPDF لتصدير ملفات PDF -->
+    <!-- مكتبة تصدير الـ PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
@@ -13,7 +13,6 @@
             --text-color: #2c2c2c;
             --primary: #111111;
             --gold: #c5a059;
-            --gold-hover: #d4af37;
             --border: #e2dcd0;
             --accent: #8b5a2b;
         }
@@ -39,7 +38,6 @@
             font-size: 1.5rem;
             margin: 0 0 5px 0;
             color: var(--primary);
-            letter-spacing: 0.5px;
         }
 
         .designer-credit {
@@ -66,7 +64,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
         }
 
         canvas {
@@ -133,9 +130,6 @@
             color: #fff;
             border-color: var(--gold);
         }
-        button.gold-btn.active {
-            background: #9c7c3d;
-        }
 
         .action-btn {
             background: var(--primary);
@@ -165,7 +159,6 @@
         .admin-section {
             border-top: 1px dashed var(--border);
             padding-top: 10px;
-            margin-top: 5px;
         }
 
         input[type="text"] {
@@ -191,17 +184,16 @@
     </header>
 
     <div class="main-container">
-        <!-- لوحة الرسم -->
+        <!-- لوحة الخط الكوفي الدائري -->
         <div class="canvas-card">
             <canvas id="kuficCanvas" width="550" height="550"></canvas>
-            <div class="hint" style="margin-top: 10px;">انقر أو اسحب على الخلايا الدائرية للكتابة</div>
+            <div class="hint" style="margin-top: 10px;">انقر أو اسحب على الخلايا الدائرية للكتابة والتكوين</div>
         </div>
 
-        <!-- لوحة التحكم والتحدث -->
+        <!-- لوحة التحكم -->
         <div class="sidebar">
-            <!-- حالة القفل -->
             <div class="lock-badge">
-                <span id="lockStatusText">🔓 الشبكية مفتوحة للتعديل</span>
+                <span id="lockStatusText">🔓 الشبكية الدائرية مفتوحة</span>
                 <button onclick="toggleGridLock()" id="lockBtn" style="padding: 3px 8px; font-size: 0.75rem;">قفل الشبكية</button>
             </div>
 
@@ -209,8 +201,8 @@
             <div class="control-group">
                 <label>النماذج الجاهزة:</label>
                 <select id="presetsSelect" onchange="loadPreset()">
-                    <option value="">-- اختر نموذجاً --</option>
                     <option value="empty">دائرة فارغة</option>
+                    <option value="hamza">حرف الهمزة (ء) الكوفي الدائري</option>
                 </select>
             </div>
 
@@ -224,7 +216,7 @@
                 </div>
             </div>
 
-            <!-- إعدادات الشبكة (تتأثر بالقفل) -->
+            <!-- إعدادات الشبكة الدائرية -->
             <div class="control-group" id="gridSettingsGroup">
                 <label>أبعاد الشبكية الدائرية:</label>
                 <div style="display: flex; gap: 10px;">
@@ -240,16 +232,16 @@
             </div>
 
             <!-- التصدير -->
-            <div class="control-group" style="gap: 8px; margin-top: 5px;">
+            <div class="control-group" style="gap: 8px;">
                 <label>التصدير والحفظ:</label>
                 <button class="action-btn" onclick="exportTransparentPNG()">تحميل كصورة شفافة (Transparent PNG)</button>
                 <button class="action-btn" style="background:#8b5a2b;" onclick="exportPDF()">تحميل كملف PDF</button>
                 <button onclick="clearCanvas()" style="background:#f2dede; color:#a94442; border-color:#ebccd1;">مسح اللوحة بالكامل</button>
             </div>
 
-            <!-- قسم المشرف (خاص بالأستاذ يوسف حصرياً) -->
+            <!-- قسم المشرف -->
             <div class="admin-section" id="adminSection">
-                <label style="color: var(--accent);">إدارة النماذج الخاصة (المشرف):</label>
+                <label style="color: var(--accent);">إدارة النماذج (المشرف):</label>
                 <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 5px;">
                     <input type="text" id="newPresetName" placeholder="اسم النموذج الجديد...">
                     <button onclick="addNewPreset()" style="background: var(--accent); color:#fff; border:none; padding:6px; border-radius:4px; font-size:0.8rem;">حفظ التصميم كنموذج جاهز</button>
@@ -264,19 +256,31 @@
 
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
-        const innerRadius = 110;
-        const outerRadius = 230;
+        const innerRadius = 100;
+        const outerRadius = 240;
 
         let rings = 5;
         let sectors = 36;
         let isLocked = false;
-        let currentTool = 1; // 1: أسود, 2: ذهبي, 0: ممحاة
+        let currentTool = 1;
 
         let gridState = Array(rings).fill().map(() => Array(sectors).fill(0));
 
-        // نماذج جاهزة أولية
+        // بناء رسمة حرف الهمزة (ء) ضمن الشبكة الدائرية
+        function createCircularHamza() {
+            let preset = Array(5).fill().map(() => Array(36).fill(0));
+            // القوس العلوي للهمزة الدائرية
+            for (let s = 14; s <= 20; s++) preset[3][s] = 1;
+            for (let s = 13; s <= 21; s++) preset[2][s] = 1;
+            // الذيل الدائري للهمزة
+            for (let s = 11; s <= 15; s++) preset[1][s] = 1;
+            for (let s = 8; s <= 12; s++) preset[0][s] = 1;
+            return preset;
+        }
+
         let customPresets = {
-            "empty": Array(5).fill().map(() => Array(36).fill(0))
+            "empty": Array(5).fill().map(() => Array(36).fill(0)),
+            "hamza": createCircularHamza()
         };
 
         function drawGrid(isExporting = false, transparentBg = false) {
@@ -318,14 +322,14 @@
                     }
 
                     if (!isExporting) {
-                        ctx.strokeStyle = '#e6e0d4';
+                        ctx.strokeStyle = '#e2dcd0';
                         ctx.lineWidth = 0.8;
                         ctx.stroke();
                     }
                 }
             }
 
-            // رسم حدود دائرية رئيسية جمالية عند التصدير
+            // إطار خارجي عند التصدير
             if (isExporting) {
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, outerRadius, 0, Math.PI * 2);
@@ -360,12 +364,11 @@
 
         function handleCanvasInteraction(event) {
             const rect = canvas.getBoundingClientRect();
-            // حساب الإحداثيات بالنسبة لحجم الـ Canvas الفعلي
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
             const x = (event.clientX - rect.left) * scaleX - centerX;
             const y = (event.clientY - rect.top) * scaleY - centerY;
-            
+
             const dist = Math.sqrt(x * x + y * y);
             let angle = Math.atan2(y, x);
             if (angle < 0) angle += Math.PI * 2;
@@ -407,14 +410,14 @@
                 btn.textContent = 'إلغاء القفل';
                 btn.style.background = '#d48806';
                 btn.style.color = '#fff';
-                statusText.textContent = '🔒 الشبكية مقفلة (محمية من التغيير)';
+                statusText.textContent = '🔒 الشبكية مقفلة';
                 settingsGroup.style.opacity = '0.4';
                 settingsGroup.style.pointerEvents = 'none';
             } else {
                 btn.textContent = 'قفل الشبكية';
                 btn.style.background = '';
                 btn.style.color = '';
-                statusText.textContent = '🔓 الشبكية مفتوحة للتعديل';
+                statusText.textContent = '🔓 الشبكية مفتوحة';
                 settingsGroup.style.opacity = '1';
                 settingsGroup.style.pointerEvents = 'auto';
             }
@@ -488,7 +491,7 @@
             select.appendChild(option);
 
             document.getElementById('newPresetName').value = '';
-            alert('تم حفظ النموذج بنجاح وإضافته لقائمة النماذج الجاهزة!');
+            alert('تم حفظ النموذج الدائري بنجاح!');
         }
 
         function loadPreset() {
@@ -504,7 +507,7 @@
             }
         }
 
-        // الرسم الأولي
+        // رسم الشبكة الدائرية فور فتح الصفحة
         drawGrid();
     </script>
 </body>
