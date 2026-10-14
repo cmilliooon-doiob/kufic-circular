@@ -3,251 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تكوين للخط الكوفي الدائري</title>
-    <!-- مكتبة تصدير الـ PDF -->
+    <title>تكوين للخط الكوفي الدائري - أستاذ يوسف حمد الصييفي</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-            --bg-color: #f7f4ed;
-            --card-bg: #ffffff;
-            --text-color: #2c2c2c;
-            --primary: #111111;
-            --gold: #c5a059;
-            --border: #e2dcd0;
-            --accent: #8b5a2b;
+            --bg-color: #e3dac9;
+            --card-bg: #f5f0e6;
+            --panel-bg: #eae1d1;
+            --text-dark: #3a322b;
+            --accent-ochre: #b86b29;
+            --accent-active: #d9ab7e;
+            --primary-black: #1a1a1a;
+            --border-color: #d1c7b7;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Tahoma', 'Segoe UI', Arial, sans-serif;
+            color: var(--text-dark);
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
             margin: 0;
-            padding: 10px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            margin: 0 0 5px 0;
-            color: var(--primary);
-        }
-
-        .designer-credit {
-            font-size: 0.95rem;
-            color: var(--accent);
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .main-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            max-width: 1200px;
+        /* القائمة العلوية */
+        .top-bar {
             width: 100%;
+            max-width: 500px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
-        .canvas-card {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        .top-title {
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            color: var(--text-dark);
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .icon-btn:hover {
+            background: var(--panel-bg);
+        }
+
+        /* لوحة العرض الرئيسية */
+        .app-workspace {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
+        .canvas-container {
+            background: #f7f3ec;
+            padding: 20px;
+            border-radius: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
         canvas {
-            background: #ffffff;
+            background: #f7f3ec;
             cursor: pointer;
             border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0,0,0,0.03);
             max-width: 100%;
             height: auto;
         }
 
-        .sidebar {
+        /* القائمة الجانبية الملتصقة باللوحة */
+        .side-toolbar {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(245, 240, 230, 0.9);
+            backdrop-filter: blur(5px);
+            border-radius: 16px;
+            padding: 8px 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+
+        .side-btn {
+            background: transparent;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .side-btn.active {
+            background: var(--accent-active);
+        }
+
+        /* اللوحة السفلية للأدوات */
+        .bottom-panel {
+            width: 100%;
+            max-width: 500px;
             background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            width: 320px;
+            border-radius: 20px;
+            padding: 12px;
+            margin-top: 15px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
         }
 
-        .control-group {
+        /* أزرار الأشكال الهندسية */
+        .shapes-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        .shape-btn {
+            background: #e8e0d0;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            height: 38px;
             display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        label {
+            justify-content: center;
+            align-items: center;
             font-size: 0.85rem;
-            font-weight: bold;
-            color: #555;
+            cursor: pointer;
+            transition: 0.2s;
         }
 
-        .tools-row {
+        .shape-btn:hover, .shape-btn.active {
+            background: var(--accent-active);
+            border-color: var(--accent-ochre);
+        }
+
+        /* اختيار الألوان والأدوات الرئيسية */
+        .color-and-tools {
+            display: flex;
+            justify-content: space-around;
+            background: #e8e0d0;
+            padding: 6px;
+            border-radius: 14px;
+        }
+
+        .tool-tab {
+            flex: 1;
+            text-align: center;
+            padding: 8px 0;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-dark);
+        }
+
+        .tool-tab.active {
+            background: var(--card-bg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* أزرار التصدير والإدارة */
+        .action-row {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
+            margin-top: 5px;
         }
 
-        button, select {
-            padding: 8px 12px;
-            font-size: 0.9rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            cursor: pointer;
-            background: #f9f9f9;
-            color: var(--text-color);
-            transition: all 0.2s;
-        }
-
-        button:hover, select:hover {
-            background: #eae5d9;
-        }
-
-        button.active {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
-
-        button.gold-btn {
-            background: var(--gold);
-            color: #fff;
-            border-color: var(--gold);
-        }
-
-        .action-btn {
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            font-weight: bold;
-            width: 100%;
+        .btn-action {
+            flex: 1;
             padding: 10px;
-            border-radius: 6px;
-        }
-        .action-btn:hover {
-            background: #333;
-        }
-
-        .lock-badge {
-            background: #fffae6;
-            border: 1px solid #ffe58f;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            color: #d48806;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .admin-section {
-            border-top: 1px dashed var(--border);
-            padding-top: 10px;
-        }
-
-        input[type="text"] {
-            padding: 8px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 10px;
+            border: none;
+            background: var(--accent-ochre);
+            color: #fff;
+            font-weight: bold;
             font-size: 0.85rem;
-            width: 100%;
-            box-sizing: border-box;
+            cursor: pointer;
         }
 
-        .hint {
-            font-size: 0.75rem;
-            color: #888;
+        .btn-action.secondary {
+            background: #8b5a2b;
+        }
+
+        .designer-credit {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--accent-ochre);
+            font-weight: bold;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>تكوين للخط الكوفي الدائري</h1>
-        <div class="designer-credit">تصميم الاستاذ : يوسف حمد الصييفي</div>
-    </header>
+    <!-- الشريط العلوي -->
+    <div class="top-bar">
+        <div class="top-title">تكوين الكوفي الدائري</div>
+        <div class="top-actions">
+            <button class="icon-btn" onclick="clearCanvas()" title="إعادة ضبط">↺</button>
+            <button class="icon-btn" onclick="exportTransparentPNG()" title="مشاركة/تصدير">⤓</button>
+        </div>
+    </div>
 
-    <div class="main-container">
-        <!-- لوحة الخط الكوفي الدائري -->
-        <div class="canvas-card">
-            <canvas id="kuficCanvas" width="550" height="550"></canvas>
-            <div class="hint" style="margin-top: 10px;">انقر أو اسحب على الخلايا الدائرية للكتابة والتكوين</div>
+    <!-- مساحة العمل واللوحة الدائرية -->
+    <div class="app-workspace">
+        <div class="canvas-container">
+            <canvas id="kuficCanvas" width="460" height="460"></canvas>
+
+            <!-- أدوات جانبية على اللوحة -->
+            <div class="side-toolbar">
+                <button class="side-btn active" title="شبكة دائرية">🎯</button>
+                <button class="side-btn" onclick="toggleLock()" id="lockBtn" title="قفل">🔓</button>
+                <button class="side-btn" onclick="exportPDF()" title="تحميل PDF">📄</button>
+            </div>
         </div>
 
-        <!-- لوحة التحكم -->
-        <div class="sidebar">
-            <div class="lock-badge">
-                <span id="lockStatusText">🔓 الشبكية الدائرية مفتوحة</span>
-                <button onclick="toggleGridLock()" id="lockBtn" style="padding: 3px 8px; font-size: 0.75rem;">قفل الشبكية</button>
+        <!-- اللوحة السفلية للأدوات (الأشكال والألوان) -->
+        <div class="bottom-panel">
+            <!-- أشكال القطاعات الهندسية -->
+            <div class="shapes-grid">
+                <div class="shape-btn active" onclick="setShape('arc')">◯</div>
+                <div class="shape-btn" onclick="setShape('radial')">│</div>
+                <div class="shape-btn" onclick="setShape('block')">█</div>
+                <div class="shape-btn" onclick="setShape('dot')">•</div>
+                <div class="shape-btn" onclick="loadHamzaPreset()">ء</div>
             </div>
 
-            <!-- النماذج الجاهزة -->
-            <div class="control-group">
-                <label>النماذج الجاهزة:</label>
-                <select id="presetsSelect" onchange="loadPreset()">
-                    <option value="empty">دائرة فارغة</option>
-                    <option value="hamza">حرف الهمزة (ء) الكوفي الدائري</option>
-                </select>
+            <!-- ألوان الحبر والأدوات الأساسية -->
+            <div class="color-and-tools">
+                <button class="tool-tab active" id="btnBlack" onclick="setColor('#1a1a1a', 'btnBlack')">◼ أسود</button>
+                <button class="tool-tab" id="btnOchre" onclick="setColor('#b86b29', 'btnOchre')">🟤 بني مغرة</button>
+                <button class="tool-tab" id="btnEraser" onclick="setColor('#f7f3ec', 'btnEraser')">🧹 ممحاة</button>
             </div>
 
-            <!-- الأدوات -->
-            <div class="control-group">
-                <label>أدوات الكتابة:</label>
-                <div class="tools-row">
-                    <button id="toolBlack" class="active" onclick="setTool(1)">◼ أسود أساسي</button>
-                    <button id="toolGold" class="gold-btn" onclick="setTool(2)">🟨 تذهيب</button>
-                    <button id="toolEraser" onclick="setTool(0)">🧹 ممحاة</button>
-                </div>
-            </div>
-
-            <!-- إعدادات الشبكة الدائرية -->
-            <div class="control-group" id="gridSettingsGroup">
-                <label>أبعاد الشبكية الدائرية:</label>
-                <div style="display: flex; gap: 10px;">
-                    <div style="flex:1;">
-                        <span class="hint">الحلقات:</span>
-                        <input type="range" id="ringsRange" min="3" max="8" value="5" style="width:100%" onchange="updateGridDimensions()">
-                    </div>
-                    <div style="flex:1;">
-                        <span class="hint">القطاعات:</span>
-                        <input type="range" id="sectorsRange" min="20" max="60" value="36" style="width:100%" onchange="updateGridDimensions()">
-                    </div>
-                </div>
-            </div>
-
-            <!-- التصدير -->
-            <div class="control-group" style="gap: 8px;">
-                <label>التصدير والحفظ:</label>
-                <button class="action-btn" onclick="exportTransparentPNG()">تحميل كصورة شفافة (Transparent PNG)</button>
-                <button class="action-btn" style="background:#8b5a2b;" onclick="exportPDF()">تحميل كملف PDF</button>
-                <button onclick="clearCanvas()" style="background:#f2dede; color:#a94442; border-color:#ebccd1;">مسح اللوحة بالكامل</button>
-            </div>
-
-            <!-- قسم المشرف -->
-            <div class="admin-section" id="adminSection">
-                <label style="color: var(--accent);">إدارة النماذج (المشرف):</label>
-                <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 5px;">
-                    <input type="text" id="newPresetName" placeholder="اسم النموذج الجديد...">
-                    <button onclick="addNewPreset()" style="background: var(--accent); color:#fff; border:none; padding:6px; border-radius:4px; font-size:0.8rem;">حفظ التصميم كنموذج جاهز</button>
-                </div>
+            <div class="action-row">
+                <button class="btn-action" onclick="exportTransparentPNG()">حفظ صورة شفافة PNG</button>
+                <button class="btn-action secondary" onclick="exportPDF()">تصدير كملف PDF</button>
             </div>
         </div>
+
+        <div class="designer-credit">تصميم الأستاذ : يوسف حمد الصييفي</div>
     </div>
 
     <script>
@@ -256,47 +293,29 @@
 
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
-        const innerRadius = 100;
-        const outerRadius = 240;
+        const innerRadius = 50;
+        const outerRadius = 210;
+        const rings = 8;
+        const sectors = 36;
 
-        let rings = 5;
-        let sectors = 36;
+        let currentColor = '#1a1a1a';
         let isLocked = false;
-        let currentTool = 1;
 
-        let gridState = Array(rings).fill().map(() => Array(sectors).fill(0));
+        // مصفوفة الحالة للشبكة الدائرية
+        let gridState = Array(rings).fill().map(() => Array(sectors).fill('#f7f3ec'));
 
-        // بناء رسمة حرف الهمزة (ء) ضمن الشبكة الدائرية
-        function createCircularHamza() {
-            let preset = Array(5).fill().map(() => Array(36).fill(0));
-            // القوس العلوي للهمزة الدائرية
-            for (let s = 14; s <= 20; s++) preset[3][s] = 1;
-            for (let s = 13; s <= 21; s++) preset[2][s] = 1;
-            // الذيل الدائري للهمزة
-            for (let s = 11; s <= 15; s++) preset[1][s] = 1;
-            for (let s = 8; s <= 12; s++) preset[0][s] = 1;
-            return preset;
-        }
+        function drawCanvas(isExporting = false, isTransparent = false) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        let customPresets = {
-            "empty": Array(5).fill().map(() => Array(36).fill(0)),
-            "hamza": createCircularHamza()
-        };
-
-        function drawGrid(isExporting = false, transparentBg = false) {
-            const width = canvas.width;
-            const height = canvas.height;
-
-            if (isExporting && transparentBg) {
-                ctx.clearRect(0, 0, width, height);
-            } else {
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, width, height);
+            if (!isTransparent) {
+                ctx.fillStyle = '#f7f3ec';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
 
             const dr = (outerRadius - innerRadius) / rings;
             const da = (Math.PI * 2) / sectors;
 
+            // رسم الخلايا الملونة
             for (let r = 0; r < rings; r++) {
                 let rIn = innerRadius + r * dr;
                 let rOut = innerRadius + (r + 1) * dr;
@@ -310,20 +329,13 @@
                     ctx.arc(centerX, centerY, rOut, aEnd, aStart, true);
                     ctx.closePath();
 
-                    if (gridState[r][s] === 1) {
-                        ctx.fillStyle = '#111111';
-                        ctx.fill();
-                    } else if (gridState[r][s] === 2) {
-                        ctx.fillStyle = '#c5a059';
-                        ctx.fill();
-                    } else if (!isExporting) {
-                        ctx.fillStyle = '#ffffff';
-                        ctx.fill();
-                    }
+                    ctx.fillStyle = gridState[r][s];
+                    ctx.fill();
 
+                    // رسم خطوط الشبكية الدائرية الناعمة
                     if (!isExporting) {
-                        ctx.strokeStyle = '#e2dcd0';
-                        ctx.lineWidth = 0.8;
+                        ctx.strokeStyle = 'rgba(180, 170, 150, 0.4)';
+                        ctx.lineWidth = 0.6;
                         ctx.stroke();
                     }
                 }
@@ -333,41 +345,29 @@
             if (isExporting) {
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, outerRadius, 0, Math.PI * 2);
-                ctx.strokeStyle = '#111';
-                ctx.lineWidth = 3;
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, innerRadius, 0, Math.PI * 2);
-                ctx.strokeStyle = '#111';
-                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = '#1a1a1a';
+                ctx.lineWidth = 2;
                 ctx.stroke();
             }
         }
 
-        let isMouseDown = false;
+        // تفاعل الماوس / اللمس مع اللوحة الدائرية
+        let isDrawing = false;
 
-        canvas.addEventListener('mousedown', (e) => {
-            isMouseDown = true;
-            handleCanvasInteraction(e);
-        });
+        canvas.addEventListener('mousedown', (e) => { isDrawing = true; handleInteraction(e); });
+        canvas.addEventListener('mousemove', (e) => { if (isDrawing) handleInteraction(e); });
+        window.addEventListener('mouseup', () => isDrawing = false);
 
-        canvas.addEventListener('mousemove', (e) => {
-            if (isMouseDown) {
-                handleCanvasInteraction(e);
-            }
-        });
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; handleInteraction(e.touches[0]); });
+        canvas.addEventListener('touchmove', (e) => { if (isDrawing) handleInteraction(e.touches[0]); });
+        window.addEventListener('touchend', () => isDrawing = false);
 
-        window.addEventListener('mouseup', () => {
-            isMouseDown = false;
-        });
-
-        function handleCanvasInteraction(event) {
+        function handleInteraction(event) {
+            if (isLocked) return;
             const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const x = (event.clientX - rect.left) * scaleX - centerX;
-            const y = (event.clientY - rect.top) * scaleY - centerY;
+            const scale = canvas.width / rect.width;
+            const x = (event.clientX - rect.left) * scale - centerX;
+            const y = (event.clientY - rect.top) * scale - centerY;
 
             const dist = Math.sqrt(x * x + y * y);
             let angle = Math.atan2(y, x);
@@ -381,134 +381,68 @@
                 let s = Math.floor(angle / da);
 
                 if (r >= 0 && r < rings && s >= 0 && s < sectors) {
-                    if (gridState[r][s] !== currentTool) {
-                        gridState[r][s] = currentTool;
-                        drawGrid();
-                    }
+                    gridState[r][s] = currentColor;
+                    drawCanvas();
                 }
             }
         }
 
-        function setTool(tool) {
-            currentTool = tool;
-            document.getElementById('toolBlack').classList.remove('active');
-            document.getElementById('toolGold').classList.remove('active');
-            document.getElementById('toolEraser').classList.remove('active');
-
-            if (tool === 1) document.getElementById('toolBlack').classList.add('active');
-            if (tool === 2) document.getElementById('toolGold').classList.add('active');
-            if (tool === 0) document.getElementById('toolEraser').classList.add('active');
+        function setColor(color, btnId) {
+            currentColor = color;
+            document.querySelectorAll('.tool-tab').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(btnId).classList.add('active');
         }
 
-        function toggleGridLock() {
+        function setShape(shapeType) {
+            document.querySelectorAll('.shape-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function toggleLock() {
             isLocked = !isLocked;
-            const btn = document.getElementById('lockBtn');
-            const statusText = document.getElementById('lockStatusText');
-            const settingsGroup = document.getElementById('gridSettingsGroup');
-
-            if (isLocked) {
-                btn.textContent = 'إلغاء القفل';
-                btn.style.background = '#d48806';
-                btn.style.color = '#fff';
-                statusText.textContent = '🔒 الشبكية مقفلة';
-                settingsGroup.style.opacity = '0.4';
-                settingsGroup.style.pointerEvents = 'none';
-            } else {
-                btn.textContent = 'قفل الشبكية';
-                btn.style.background = '';
-                btn.style.color = '';
-                statusText.textContent = '🔓 الشبكية مفتوحة';
-                settingsGroup.style.opacity = '1';
-                settingsGroup.style.pointerEvents = 'auto';
-            }
-        }
-
-        function updateGridDimensions() {
-            if (isLocked) return;
-            const newRings = parseInt(document.getElementById('ringsRange').value);
-            const newSectors = parseInt(document.getElementById('sectorsRange').value);
-
-            if (newRings !== rings || newSectors !== sectors) {
-                rings = newRings;
-                sectors = newSectors;
-                gridState = Array(rings).fill().map(() => Array(sectors).fill(0));
-                drawGrid();
-            }
+            document.getElementById('lockBtn').innerText = isLocked ? '🔒' : '🔓';
         }
 
         function clearCanvas() {
-            gridState = Array(rings).fill().map(() => Array(sectors).fill(0));
-            drawGrid();
+            gridState = Array(rings).fill().map(() => Array(sectors).fill('#f7f3ec'));
+            drawCanvas();
+        }
+
+        function loadHamzaPreset() {
+            clearCanvas();
+            // رسم نموذج كوفي دائري لحرف الهمزة
+            for (let s = 10; s <= 16; s++) gridState[5][s] = '#1a1a1a';
+            for (let s = 9; s <= 17; s++) gridState[4][s] = '#1a1a1a';
+            for (let s = 8; s <= 12; s++) gridState[3][s] = '#b86b29';
+            for (let s = 5; s <= 9; s++) gridState[2][s] = '#1a1a1a';
+            drawCanvas();
         }
 
         function exportTransparentPNG() {
-            drawGrid(true, true);
-            const link = document.createElement('a');
-            link.download = 'circular-kufic-design.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            drawGrid(false, false);
+            drawCanvas(true, true);
+            const a = document.createElement('a');
+            a.download = 'kufic-circular-design.png';
+            a.href = canvas.toDataURL('image/png');
+            a.click();
+            drawCanvas();
         }
 
         function exportPDF() {
-            drawGrid(true, false);
+            drawCanvas(true, false);
             const imgData = canvas.toDataURL('image/png');
             const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4'
-            });
-
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            const imgSize = 140;
-            const xPos = (pageWidth - imgSize) / 2;
-
-            pdf.setFontSize(18);
-            pdf.text('تكوين للخط الكوفي الدائري', pageWidth / 2, 25, { align: 'center' });
+            const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
             
+            pdf.setFontSize(16);
+            pdf.text('تكوين للخط الكوفي الدائري', 105, 25, { align: 'center' });
             pdf.setFontSize(11);
-            pdf.setTextColor(139, 90, 43);
-            pdf.text('تصميم الاستاذ : يوسف حمد الصييفي', pageWidth / 2, 33, { align: 'center' });
-
-            pdf.addImage(imgData, 'PNG', xPos, 45, imgSize, imgSize);
-            pdf.save('circular-kufic-design.pdf');
-            drawGrid(false, false);
+            pdf.text('تصميم الأستاذ : يوسف حمد الصييفي', 105, 33, { align: 'center' });
+            pdf.addImage(imgData, 'PNG', 35, 45, 140, 140);
+            pdf.save('kufic-circular-design.pdf');
+            drawCanvas();
         }
 
-        function addNewPreset() {
-            const name = document.getElementById('newPresetName').value.trim();
-            if (!name) {
-                alert('الرجاء إدخال اسم للنموذج');
-                return;
-            }
-            customPresets[name] = JSON.parse(JSON.stringify(gridState));
-            
-            const select = document.getElementById('presetsSelect');
-            const option = document.createElement('option');
-            option.value = name;
-            option.textContent = name;
-            select.appendChild(option);
-
-            document.getElementById('newPresetName').value = '';
-            alert('تم حفظ النموذج الدائري بنجاح!');
-        }
-
-        function loadPreset() {
-            const val = document.getElementById('presetsSelect').value;
-            if (!val) return;
-            if (customPresets[val]) {
-                gridState = JSON.parse(JSON.stringify(customPresets[val]));
-                rings = gridState.length;
-                sectors = gridState[0].length;
-                document.getElementById('ringsRange').value = rings;
-                document.getElementById('sectorsRange').value = sectors;
-                drawGrid();
-            }
-        }
-
-        // رسم الشبكة الدائرية فور فتح الصفحة
-        drawGrid();
+        drawCanvas();
     </script>
 </body>
 </html>
